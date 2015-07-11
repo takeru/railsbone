@@ -1,2 +1,17 @@
 <h1>Top#index</h1>
 <p>Find me in app/views/top/index.html.erb</p>
+
+<script>
+var fetchUsers = function(){
+  var users = new Railsbone.Collections.Users();
+  users.fetch({success:function(collection, response, options){
+    console.log("fetch success: arguments=", arguments);
+    console.log("users=", users);
+    users.each(function(user){
+      console.log("id=", user.get("id"), "name=", user.get("name"), "email=", user.get("email"), "url=", user.get("url"));
+    });
+  }});
+}
+</script>
+
+<button onclick="javascript:fetchUsers()">fetchUsers</button>
