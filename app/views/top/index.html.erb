@@ -1,37 +1,69 @@
 <h1>Top#index</h1>
 <p>Find me in app/views/top/index.html.erb</p>
 
+<div>
+  <div>Create User:</div>
+  <div>Name:<input id="name" /></div>
+  <div>Email:<input id="email" /></div>
+  <button id="createUser">createUser</button>
+</div>
+
+<div>
+  <button id="fetchUsers">fetchUsers</button>
+</div>
+
 <script>
+var users = new Railsbone.Collections.Users();
+// http://backbonejs.org/#Events-catalog
+users.on("add",function(model, collection, options){
+  // when a model is added to a collection.
+  console.log("on add", arguments, model.cid, model.get("id"), model.get("name"));
+});
+users.on("remove",function(model, collection, options){
+  // when a model is removed from a collection.
+  console.log("on remove", arguments, model.cid, model.get("id"), model.get("name"));
+});
+users.on("update",function(model, options){
+  // single event triggered after any number of models have been added or removed from a collection.
+  console.log("on update", arguments);
+});
+users.on("reset",function(collection, options){
+  // when the collection's entire contents have been replaced.
+  console.log("on reset", arguments);
+});
+
 var fetchUsers = function(){
   console.log("======== fetchUsers ========")
-  var users = new Railsbone.Collections.Users();
-
-  // http://backbonejs.org/#Events-catalog
-  users.on("add",function(model, collection, options){
-    // when a model is added to a collection.
-    console.log("on add", arguments, model.cid, model.get("id"), model.get("name"));
-  });
-  users.on("remove",function(model, collection, options){
-    // when a model is removed from a collection.
-    console.log("on remove", arguments, model.cid, model.get("id"), model.get("name"));
-  });
-  users.on("update",function(model, options){
-    // single event triggered after any number of models have been added or removed from a collection.
-    console.log("on update", arguments);
-  });
-  users.on("reset",function(collection, options){
-    // when the collection's entire contents have been replaced.
-    console.log("on reset", arguments);
-  });
-
   users.fetch({success:function(collection, response, options){
     console.log("fetch success: arguments=", arguments);
-    //console.log("users=", users);
-    //users.each(function(user){
-    //  console.log("cid=", user.cid, "id=", user.get("id"), "name=", user.get("name"), "email=", user.get("email"), "url=", user.get("url"));
-    //});
   }});
 }
-</script>
 
-<button onclick="javascript:fetchUsers()">fetchUsers</button>
+var createUser = function(name, email){
+  console.log("======== createUser ========");
+  var user = new Railsbone.Models.User({name:name, email:email});
+  user.on("all", function(){
+    var args = Array.prototype.slice.call(arguments);
+    var event_name = args.shift();
+    console.log("on "+event_name, args);
+  });
+  user.save({}, {success:function(model, response, options){
+    console.log("save success: arguments=", arguments);
+  }});
+}
+
+$("button#fetchUsers").click(function(){
+  fetchUsers();
+});
+
+$("button#createUser").click(function(){
+  var name  = $('input#name').val();
+  var email = $('input#email').val();
+  if(name && email){
+    createUser(name, email);
+    $('input#name').val("");
+    $('input#email').val("");
+  }
+});
+
+</script>
