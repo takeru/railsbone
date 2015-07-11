@@ -49,7 +49,8 @@ var userHtml = function(user)
        "id="         + user.get("id")
     + " name="       + user.get("name")
     + " email="      + user.get("email")
-  );
+    + " url="        + user.get("url")
+  ) + "<a class='delete'>[x]</a>";
 }
 
 var fetchUsers = function(){
@@ -61,6 +62,7 @@ var fetchUsers = function(){
 
 var createUser = function(name, email){
   console.log("======== createUser ========");
+  /*
   var user = new Railsbone.Models.User({name:name, email:email});
   user.on("all", function(){
     var args = Array.prototype.slice.call(arguments);
@@ -69,6 +71,17 @@ var createUser = function(name, email){
   });
   user.save({}, {success:function(model, response, options){
     console.log("save success: arguments=", arguments);
+  }});
+  */
+  users.create({name:name, email:email}, {success:function(){
+    console.log("create success: arguments=", arguments);
+  }});
+}
+
+var deleteUser = function(user){
+  console.log("======== deleteUser ========");
+  user.destroy({success:function(model, response, options){
+    console.log("destroy success: arguments=", arguments);
   }});
 }
 
@@ -84,6 +97,12 @@ $("button#createUser").click(function(){
     $('input#name').val("");
     $('input#email').val("");
   }
+});
+
+$("ul#users").on("click", "a.delete", function(){
+  var cid = $(this).closest("li").attr("id").match(/^user_(.+)$/)[1];
+  var user = users.find(function(user){ return user.cid == cid; })
+  deleteUser(user);
 });
 
 $(function(){
