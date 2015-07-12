@@ -12,51 +12,11 @@
   <button id="fetchUsers">fetchUsers</button>
 </div>
 
-[by jQuery]
-<div>
-<ul id="users">
-</ul>
-</div>
-
-[by View class]
 <div id="byview">
 </div>
 
 <script>
 var users = new Railsbone.Collections.Users();
-// http://backbonejs.org/#Events-catalog
-users.on("add",function(model, collection, options){
-  // when a model is added to a collection.
-  console.log("users on add", arguments, model.cid, model.get("id"), model.get("name"));
-  var li = $("<li />").attr("id","user_"+model.cid).html(userHtml(model));
-  $("ul#users").append(li);
-});
-users.on("remove",function(model, collection, options){
-  // when a model is removed from a collection.
-  console.log("users on remove", arguments, model.cid, model.get("id"), model.get("name"));
-  $("ul#users").find("#user_"+model.cid).remove();
-});
-users.on("change",function(model, options){
-  // when a model's attributes have changed.
-  console.log("users on change", arguments, model.cid, model.get("id"), model.get("name"));
-  $("ul#users").find("#user_"+model.cid).html(userHtml(model));
-});
-users.on("all", function(){
-  var args = Array.prototype.slice.call(arguments);
-  var event_name = args.shift();
-  if(0<=["add","remove","change"].indexOf(event_name)){ return; }
-  console.log("users on "+event_name, args);
-});
-
-var userHtml = function(user)
-{
-  return _.escape(
-       "id="         + user.get("id")
-    + " name="       + user.get("name")
-    + " email="      + user.get("email")
-    + " url="        + user.get("url")
-  ) + "<a class='delete'>[x]</a>";
-}
 
 var fetchUsers = function(){
   console.log("======== fetchUsers ========")
@@ -67,26 +27,8 @@ var fetchUsers = function(){
 
 var createUser = function(name, email){
   console.log("======== createUser ========");
-  /*
-  var user = new Railsbone.Models.User({name:name, email:email});
-  user.on("all", function(){
-    var args = Array.prototype.slice.call(arguments);
-    var event_name = args.shift();
-    console.log("user on "+event_name, args);
-  });
-  user.save({}, {success:function(model, response, options){
-    console.log("save success: arguments=", arguments);
-  }});
-  */
   users.create({name:name, email:email}, {success:function(){
     console.log("create success: arguments=", arguments);
-  }});
-}
-
-var deleteUser = function(user){
-  console.log("======== deleteUser ========");
-  user.destroy({success:function(model, response, options){
-    console.log("destroy success: arguments=", arguments);
   }});
 }
 
@@ -102,12 +44,6 @@ $("button#createUser").click(function(){
     $('input#name').val("");
     $('input#email').val("");
   }
-});
-
-$("ul#users").on("click", "a.delete", function(){
-  var cid = $(this).closest("li").attr("id").match(/^user_(.+)$/)[1];
-  var user = users.find(function(user){ return user.cid == cid; })
-  deleteUser(user);
 });
 
 $(function(){
