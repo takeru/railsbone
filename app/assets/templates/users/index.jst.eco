@@ -1,0 +1,8 @@
+<% for user in @users: %>
+  <li>
+    id=<%= user.id %>
+    name=<%= user.name %>
+    email=<%= user.email %>
+    url=<%= user.url %>
+  </li>
+<% end %>

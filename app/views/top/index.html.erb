@@ -12,9 +12,14 @@
   <button id="fetchUsers">fetchUsers</button>
 </div>
 
+[by jQuery]
 <div>
 <ul id="users">
 </ul>
+</div>
+
+[by View class]
+<div id="byview">
 </div>
 
 <script>
@@ -107,6 +112,9 @@ $("ul#users").on("click", "a.delete", function(){
 
 $(function(){
   fetchUsers();
+
+  var usersView = new Railsbone.Views.UsersIndex({collection:users});
+  $("#byview").append(usersView.$el);
 });
 
 </script>
