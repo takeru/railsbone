@@ -12,45 +12,45 @@
   <button id="fetchUsers">fetchUsers</button>
 </div>
 
-<div id="byview">
+<div id="content">
 </div>
 
 <script>
-var users = new Railsbone.Collections.Users();
-
-var fetchUsers = function(){
-  console.log("======== fetchUsers ========")
-  users.fetch({success:function(collection, response, options){
-    console.log("fetch success: arguments=", arguments);
-  }});
-}
-
-var createUser = function(name, email){
-  console.log("======== createUser ========");
-  users.create({name:name, email:email}, {success:function(){
-    console.log("create success: arguments=", arguments);
-  }});
-}
-
-$("button#fetchUsers").click(function(){
-  fetchUsers();
-});
-
-$("button#createUser").click(function(){
-  var name  = $('input#name').val();
-  var email = $('input#email').val();
-  if(name && email){
-    createUser(name, email);
-    $('input#name').val("");
-    $('input#email').val("");
-  }
-});
-
 $(function(){
+  var users = new Railsbone.Collections.Users();
+
+  var fetchUsers = function(){
+    console.log("======== fetchUsers ========")
+    users.fetch({success:function(collection, response, options){
+      console.log("fetch success: arguments=", arguments);
+    }});
+  }
+
+  var createUser = function(name, email){
+    console.log("======== createUser ========");
+    users.create({name:name, email:email}, {success:function(){
+      console.log("create success: arguments=", arguments);
+    }});
+  }
+
+  $("button#fetchUsers").click(function(){
+    fetchUsers();
+  });
+
+  $("button#createUser").click(function(){
+    var name  = $('input#name').val();
+    var email = $('input#email').val();
+    if(name && email){
+      createUser(name, email);
+      $('input#name').val("");
+      $('input#email').val("");
+    }
+  });
+
   fetchUsers();
 
   var usersView = new Railsbone.Views.UsersIndex({collection:users});
-  $("#byview").append(usersView.$el);
+  usersView.render();
+  $("#content").append(usersView.$el);
 });
-
 </script>

@@ -1,46 +1,25 @@
-class Railsbone.Views.UsersIndex extends Backbone.View
+class Railsbone.Views.UsersItem extends Backbone.Marionette.ItemView
+  template: JST['users/index_item']
+  tagName: "li"
 
-  template: JST['users/index']
-
-  tagName: "ul"
-
-  collection: null
-
-  initialize: ->
-    console.log("init", @collection)
-    @listenTo(@collection, "add",    @onAdd);
-    @listenTo(@collection, "remove", @onRemove);
-    @listenTo(@collection, "change", @onChange);
-    @listenTo(@collection, "update", @onUpdate);
-
-  onAdd: (model, collection, options)->
-    console.log("View onAdd")
-    # @render()
-
-  onRemove: (model, collection, options)->
-    console.log("View onRemove")
-    # @render()
-
-  onChange: (model, options)->
-    console.log("View onChange")
-    @render()
-
-  onUpdate: (collection, options)->
-    console.log("View onUpdate")
-    @render()
-
-  render: ->
-    console.log("View render")
-    html = @template(users: @collection.toJSON())
-    @$el.html(html);
-    return this;
-
-  events: {
-    "click .delete": "onDeleteClick"
+  modelEvents:{
+    "change": "onModelChange"
   }
+  onModelChange: (model, options)->
+    console.log("Item onModelChange")
+    @render()
 
-  onDeleteClick: (jqEvent)->
-    user_id = $(jqEvent.target).closest("li").attr("user_id")
-    console.log("View onDeleteClick", user_id)
+  ui:{
+    "deleteButton": ".delete"
+  }
+  triggers:{
+    "click @ui.deleteButton": "deleteButtonClick",
+  }
+  onDeleteButtonClick: ->
+    console.log("Item onDeleteButtonClick", @model.get("id"))
+    @model.destroy()
 
-    @collection.get(user_id).destroy()
+
+class Railsbone.Views.UsersIndex extends Backbone.Marionette.CollectionView
+  tagName: "ul"
+  childView: Railsbone.Views.UsersItem
