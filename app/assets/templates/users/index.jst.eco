@@ -1,8 +1,9 @@
 <% for user in @users: %>
-  <li>
+  <li user_id="<%= user.id %>">
     id=<%= user.id %>
     name=<%= user.name %>
     email=<%= user.email %>
     url=<%= user.url %>
+    <a class="delete">[x]</a>
   </li>
 <% end %>

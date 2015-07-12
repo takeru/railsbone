@@ -28,3 +28,13 @@ class Railsbone.Views.UsersIndex extends Backbone.View
     html = @template(users: @collection.toJSON())
     @$el.html(html);
     return this;
+
+  events: {
+    "click .delete": "onDeleteClick"
+  }
+
+  onDeleteClick: (jqEvent)->
+    user_id = $(jqEvent.target).closest("li").attr("user_id")
+    console.log("onDeleteClick", user_id)
+
+    @collection.get(user_id).destroy()
